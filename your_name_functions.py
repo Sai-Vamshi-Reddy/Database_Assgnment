@@ -103,11 +103,20 @@ def insert_a_customer_record(database_connection):
         print(f"Integrity error: {e}")
     except sqlite3.Error as e:
         print(f"Error inserting customer record: {e}")
-        
+
 def query_rep_table(database_connection):
-    #Create a function that prompts the user for a rep number. 
-    # If the result is not empty, display the first record.
-    pass
+    rep_num = input("Enter the rep number to query: ").strip()
+    try:
+        cursor = database_connection.cursor()
+        cursor.execute('SELECT * FROM rep WHERE rep_num = ?', (rep_num,))
+        record = cursor.fetchone()
+        if record:
+            print("Record found:", record)
+        else:
+            print("No record found with that rep number.")
+    except sqlite3.Error as e:
+        print(f"Error querying rep table: {e}")
+
 def update_rep_table(database_connection):
     #Create a function that prompts the user for a rep number.  
     # Then use the rep number to update the rep commission if it is in the [0.0 to 0.20]  range
