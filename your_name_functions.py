@@ -40,12 +40,45 @@ def create_rep_table(database_connection):
     except sqlite3.Error as e:
         print(f"Error creating rep table: {e}")
 
-def create_customer_table(database_connectiion):
-    #use the connection object to create the database table
-    #Create a function that will create the customer table and add the data to it.
-    # Use the data in sql_commands.txt to help you with it.
-    pass
-def insert_a_customer_record(database_connectiion):
+def create_customer_table(database_connection):
+    try:
+        cursor = database_connection.cursor()
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS customer (
+                customer_num CHAR(3) PRIMARY KEY,
+                customer_name CHAR(35) NOT NULL,
+                street CHAR(15),
+                city CHAR(15),
+                state CHAR(2),
+                zip CHAR(5),
+                balance DECIMAL(8, 2),
+                credit_limit DECIMAL(8, 2),
+                rep_num CHAR(2),
+                FOREIGN KEY (rep_num) REFERENCES rep (rep_num)
+            );
+        ''')
+        customer_data = [
+                 ('148','Al''s Appliance and Sport','2837 Greenway','Fillmore','FL','33336',6550.00,7500.00,'20'),
+                ('282','Brookings Direct','3827 Devon','Grove','FL','33321',431.50,10000.00,'35'),
+                ('356','Ferguson''s','382  Wildwood','Northfield','FL','33146',5785.00,7500.00,'65'),
+                ('408','The Everything Shop','1828 Raven','Crystal','FL','33503',5285.25,5000.00,'35'),
+                ('462','Bargains Galore','3829  Central','Grove','FL','33321',3412.00,10000.00,'65'),
+                ('524','Kline''s','838 Ridgeland','Fillmore','FL','33336',12762.00,15000.00,'20'),
+                ('608','Johnson''s Department Store','372  Oxford','Sheldon','FL','33553',2106.00,10000.00,'65'),
+                ('687','Lee''s Sport and Appliance','282 Evergreen','Altonville','FL','32543',2851.00,5000.00,'35'),
+                ('725','Deerfield''s Four Seasons','282 Columbia','Sheldon','FL','33553',248.00,7500.00,'35')
+            #
+        ]
+        cursor.executemany('INSERT INTO customer VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', customer_data)
+        database_connection.commit()
+        print("Customer table created and data inserted successfully.")
+    except sqlite3.IntegrityError as e:
+        print(f"Integrity error: {e}")
+    except sqlite3.Error as e:
+        print(f"Error creating customer table: {e}")
+
+
+def insert_a_customer_record(database_connection):
     #Create a function that prompts the user for a rep number. 
     # If the result is not empty, display the first record.
     pass
