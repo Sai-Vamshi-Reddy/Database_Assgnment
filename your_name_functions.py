@@ -79,9 +79,31 @@ def create_customer_table(database_connection):
 
 
 def insert_a_customer_record(database_connection):
-    #Create a function that prompts the user for a rep number. 
-    # If the result is not empty, display the first record.
-    pass
+    try:
+        customer_num = input("Enter customer number: ").strip()
+        customer_name = input("Enter customer name: ").strip()
+        street = input("Enter street: ").strip()
+        city = input("Enter city: ").strip()
+        state = input("Enter state: ").strip()
+        zip_code = input("Enter ZIP code: ").strip()
+        try:
+            balance = float(input("Enter balance: "))
+            credit_limit = float(input("Enter credit limit: "))
+        except ValueError:
+            print("Invalid input for balance or credit limit. Please enter a numeric value.")
+            return
+        rep_num = input("Enter rep number: ").strip()
+
+        cursor = database_connection.cursor()
+        cursor.execute('INSERT INTO customer VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', 
+                       (customer_num, customer_name, street, city, state, zip_code, balance, credit_limit, rep_num))
+        database_connection.commit()
+        print("Customer record inserted successfully.")
+    except sqlite3.IntegrityError as e:
+        print(f"Integrity error: {e}")
+    except sqlite3.Error as e:
+        print(f"Error inserting customer record: {e}")
+        
 def query_rep_table(database_connection):
     #Create a function that prompts the user for a rep number. 
     # If the result is not empty, display the first record.
