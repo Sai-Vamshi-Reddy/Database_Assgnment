@@ -28,7 +28,7 @@ def create_rep_table(database_connection):
             );
         ''')
         rep_data = [
-            ('20', 'Vamshi', 'Sai', '624 Randall', 'Grove', 'FL', '33321', 20542.50, 0.05),
+            ('20', 'Kethireddy', 'Sai Vamshi Reddy', '624 Randall', 'Grove', 'FL', '33321', 20542.50, 0.05),
             ('35', 'Hull', 'Richard', '532 Jackson', 'Sheldon', 'FL', '33553', 39216.00, 0.07),
             ('65', 'Perez', 'Juan', '1626 Taylor', 'Fillmore', 'FL', '33336', 23487.00, 0.05)
         ]
@@ -105,7 +105,7 @@ def insert_a_customer_record(database_connection):
     except sqlite3.Error as e:
         print(f"Error inserting customer record: {e}")
     print_all_customer_data(database_connection)
-    
+
 def query_rep_table(database_connection):
     rep_num = input("Enter the rep number to query: ").strip()
     try:
