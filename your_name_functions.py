@@ -39,6 +39,7 @@ def create_rep_table(database_connection):
         print(f"Integrity error: {e}")
     except sqlite3.Error as e:
         print(f"Error creating rep table: {e}")
+    print_all_rep_data(database_connection)
 
 def create_customer_table(database_connection):
     try:
@@ -76,7 +77,7 @@ def create_customer_table(database_connection):
         print(f"Integrity error: {e}")
     except sqlite3.Error as e:
         print(f"Error creating customer table: {e}")
-
+    print_all_customer_data(database_connection)
 
 def insert_a_customer_record(database_connection):
     try:
@@ -103,7 +104,8 @@ def insert_a_customer_record(database_connection):
         print(f"Integrity error: {e}")
     except sqlite3.Error as e:
         print(f"Error inserting customer record: {e}")
-
+    print_all_customer_data(database_connection)
+    
 def query_rep_table(database_connection):
     rep_num = input("Enter the rep number to query: ").strip()
     try:
@@ -145,7 +147,7 @@ def update_rep_table(database_connection):
             print("No record found with that rep number.")
     except sqlite3.Error as e:
         print(f"Error querying rep table: {e}")
-
+    print_all_rep_data(database_connection)
 
 def delete_customer_record(database_connection):
     customer_num = input("Enter customer number to delete: ").strip()
