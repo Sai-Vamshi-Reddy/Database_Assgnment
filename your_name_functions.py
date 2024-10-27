@@ -146,15 +146,43 @@ def update_rep_table(database_connection):
     except sqlite3.Error as e:
         print(f"Error querying rep table: {e}")
 
+
 def delete_customer_record(database_connection):
-    # Create a function that prompts the user for a customer number.  
-    # if the customer number exists, confirm for deletion and 
-    # then and delete then delete that customer 
-    pass
+    customer_num = input("Enter customer number to delete: ").strip()
+    try:
+        cursor = database_connection.cursor()
+        cursor.execute('SELECT * FROM customer WHERE customer_num = ?', (customer_num,))
+        record = cursor.fetchone()
+        if record:
+            confirm = input("Are you sure you want to delete this record? (y/n): ").strip().lower()
+            if confirm == 'y':
+                cursor.execute('DELETE FROM customer WHERE customer_num = ?', (customer_num,))
+                database_connection.commit()
+                print("Customer record deleted.")
+                print_all_customer_data(database_connection)
+            else:
+                print("Deletion canceled.")
+        else:
+            print("Customer number not found.")
+    except sqlite3.Error as e:
+        print(f"Error deleting customer record: {e}")
+        
+    
+
 def delete_database(file_name, database_connection):
-    # Create a function that deletes the database.  Verify that the file exists. 
-    # Close the connection.  Then confirm the user really wants to delete the file,  Then delete the file.
-    pass
+    if os.path.exists(file_name):
+        confirm = input("Are you sure you want to delete the database file? (y/n): ").strip().lower()
+        if confirm == 'y':
+            try:
+                database_connection.close()
+                os.remove(file_name)
+                print("Database file deleted.")
+            except Exception as e:
+                print(f"Error deleting the database file: {e}")
+        else:
+            print("Deletion canceled.")
+    else:
+        print("File does not exist.")
 
 def print_all_rep_data(database_connection):
     try:
