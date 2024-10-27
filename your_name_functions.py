@@ -118,9 +118,34 @@ def query_rep_table(database_connection):
         print(f"Error querying rep table: {e}")
 
 def update_rep_table(database_connection):
-    #Create a function that prompts the user for a rep number.  
-    # Then use the rep number to update the rep commission if it is in the [0.0 to 0.20]  range
-    pass
+    try:
+        rep_num = input("Enter rep number to update commission: ").strip()
+        try:
+            new_commission = float(input("Enter new commission (0.0 to 0.20): "))
+            if not (0.0 <= new_commission <= 0.20):
+                print("Commission out of range. Must be between 0.0 and 0.20.")
+                return
+        except ValueError:
+            print("Invalid input for commission. Please enter a decimal value.")
+            return
+
+        cursor = database_connection.cursor()
+        cursor.execute('UPDATE rep SET commission = ? WHERE rep_num = ?', (new_commission, rep_num))
+        database_connection.commit()
+        print("Commission updated successfully.")
+    except sqlite3.Error as e:
+        print(f"Error updating rep commission: {e}")
+    try:
+        cursor = database_connection.cursor()
+        cursor.execute('SELECT * FROM rep WHERE rep_num = ?', (rep_num,))
+        record = cursor.fetchone()
+        if record:
+            print("Updated record:", record)
+        else:
+            print("No record found with that rep number.")
+    except sqlite3.Error as e:
+        print(f"Error querying rep table: {e}")
+
 def delete_customer_record(database_connection):
     # Create a function that prompts the user for a customer number.  
     # if the customer number exists, confirm for deletion and 
@@ -130,3 +155,32 @@ def delete_database(file_name, database_connection):
     # Create a function that deletes the database.  Verify that the file exists. 
     # Close the connection.  Then confirm the user really wants to delete the file,  Then delete the file.
     pass
+
+def print_all_rep_data(database_connection):
+    try:
+        cursor = database_connection.cursor()
+        cursor.execute("SELECT * FROM rep")
+        records = cursor.fetchall()
+        if records:
+            print("All Rep Records:")
+            for record in records:
+                print(record)
+        else:
+            print("No records found in the rep table.")
+    except sqlite3.Error as e:
+        print(f"Error retrieving data from rep table: {e}")
+
+
+def print_all_customer_data(database_connection):
+    try:
+        cursor = database_connection.cursor()
+        cursor.execute("SELECT * FROM customer")
+        records = cursor.fetchall()
+        if records:
+            print("All Customer Records:")
+            for record in records:
+                print(record)
+        else:
+            print("No records found in the customer table.")
+    except sqlite3.Error as e:
+        print(f"Error retrieving data from customer table: {e}")
